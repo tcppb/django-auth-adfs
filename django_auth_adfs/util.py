@@ -37,5 +37,5 @@ def get_adfs_auth_url(next_url=None, hostname=None):
         get_redirect_uri(hostname),
     )
     if next_url:
-        url += "&state={0}".format(urlsafe_base64_encode(next_url))
+        url += "&state={0}".format(urlsafe_base64_encode(next_url.encode()).decode())
     return url
