@@ -7,6 +7,18 @@ try:
 except ImportError:
     import urllib.parse as urlparse
 
+def _decode_url(url):
+    return urlsafe_base64_encode(url).decode()
+
+try:
+    import django
+    if django.VERSION[0] > 1:
+        def _decode_url(url):
+            return urlsafe_base64_encode(url)
+except:
+    pass
+
+
 
 def get_redirect_uri(hostname=None):
     if isinstance(settings.REDIR_URI, (list, tuple)):
@@ -37,5 +49,5 @@ def get_adfs_auth_url(next_url=None, hostname=None):
         get_redirect_uri(hostname),
     )
     if next_url:
-        url += "&state={0}".format(urlsafe_base64_encode(next_url.encode()).decode())
+        url += "&state={0}".format(_decode_url(next_url.encode()))
     return url
